@@ -23,15 +23,9 @@ Para correr este proyecto localmente:
 
 1. **Clonar el repositorio**:
    ```
-   git clone https://github.com/tu-usuario/cuadricula-interactiva.git
+   git clone https://github.com/palazzid88/testWorpik.git
    ```
-
-2. **Navegar al directorio del proyecto**:
-   ```
-   cd cuadricula-interactiva
-   ```
-
-3. **Abrir el archivo `index.html` en tu navegador**:
+2. **Abrir el archivo `index.html` en tu navegador**:
    - Haz doble clic sobre `index.html` o abre el archivo en un editor de texto y selecciona "Abrir con el navegador".
 
 ## Instrucciones de uso
