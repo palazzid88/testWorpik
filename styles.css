@@ -1,0 +1,63 @@
+/* Contenedor de la cuadrícula */
+body, html {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(100, 1fr); /* 100 columnas fijas */
+  grid-auto-rows: 1fr; /* Crea filas automáticamente */
+  gap: 1px; 
+  /* Espacio entre celdas */
+  background-color: #ccc;
+  width: 100vw; /* Ocupa todo el ancho de la pantalla */
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+/* Estilos base para cada celda */
+.cell {
+  background-color: white;
+  /* border: 1px solid #ddd; */
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Efecto hover */
+.cell:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+/* Estilo para la celda activada */
+.cell.active {
+  background-color: #4CAF50; /* Color de activación */
+}
+
+/* Menú de colores */
+#colorMenu {
+  display: none; /* Inicialmente oculto */
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Asegura que el menú esté por encima de otras cosas */
+}
+
+#colorMenu button {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+  width: 20px;
+  text-align: center;
+}
+
+
+/* Cambiar el color de los botones al hacer hover */
+#colorMenu button:hover {
+  background-color: #f0f0f0;
+}
