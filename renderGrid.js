@@ -1,6 +1,7 @@
 // Variable global para almacenar el color elegido
-let colorSeleccionado = "#4CAF50"; // Color predeterminado (verde)
-let modoArrastre = false; // Declaración de la variable modoArrastre
+let colorSeleccionado = "#4CAF50"; // Color predeterminado
+let modoArrastre = false;
+let mousePresionado = false;
 
 // Función para renderizar la grilla
 function renderGrid() {
@@ -15,120 +16,98 @@ function renderGrid() {
   // Crear celdas dinámicamente
   for (let i = 0; i < totalCells; i++) {
     const cell = document.createElement("div");
-    cell.classList.add("cell"); // Clase para los estilos css
-    cell.id = `cell-${i}`; // Asigno un id único para identifiacar cada celda
+    cell.classList.add("cell");
+    cell.id = `cell-${i}`;
     container.appendChild(cell);
-    console.log(`Celda ${i} creada con ID: cell-${i}`);
   }
 
-  // Capturar el evento de mousedown para iniciar el arrastre
-  container.addEventListener("mousedown", function(event) {
+  // Evento para detectar mousedown
+  container.addEventListener("mousedown", function (event) {
     if (event.target.classList.contains("cell")) {
+      mousePresionado = true; // El mouse está presionado
+      modoArrastre = true; // Activar el modo de arrastre
       console.log("Modo arrastre activado en mousedown");
-      modoArrastre = true; // Activar el modo arrastre
     }
   });
 
-  // Capturar el evento de mouseup para desactivar el arrastre
-  container.addEventListener("mouseup", function() {
+  // Evento para detectar mouseup
+  container.addEventListener("mouseup", function () {
     if (modoArrastre) {
       console.log("Modo arrastre desactivado en mouseup");
       modoArrastre = false; // Desactivar el modo arrastre
+      mousePresionado = false; // El mouse ya no está presionado
     }
   });
 
-  // Capturar el evento de click sobre las celdas
-  container.addEventListener("click", function(event) {
+  // Evento para detectar click en celdas
+  container.addEventListener("click", function (event) {
     if (event.target.classList.contains("cell")) {
       const cell = event.target;
       const celdasSeleccionadas = document.querySelectorAll(".cell.active");
 
-      console.log(`Click detectado en una celda: ${cell.id}`);
-      console.log(`Celdas seleccionadas: ${celdasSeleccionadas.length}`);
+      console.log(`Click en: ${cell.id}, Celdas seleccionadas: ${celdasSeleccionadas.length}`);
 
-      // Lógica para activar/desactivar celdas
       if (cell.classList.contains("active")) {
         cell.classList.remove("active");
         cell.style.backgroundColor = "white";
-        console.log(`Celda desactivada: ${cell.id}`);
       } else {
         cell.classList.add("active");
         cell.style.backgroundColor = colorSeleccionado;
-        console.log(`Celda activada: ${cell.id}`);
       }
 
-      // Detectar si el modo de arrastre se debe activar
+      // Modo arrastre solo si hay más de una celda seleccionada
       if (celdasSeleccionadas.length > 1) {
         modoArrastre = true;
-        console.log("Modo arrastre activado");
       } else {
         modoArrastre = false;
-        console.log("Modo arrastre desactivado, solo hay una celda seleccionada");
       }
     }
   });
 
-  // Capturar el evento de mouseover (cuando se hace arrastre sobre celdas)
-  container.addEventListener("mouseover", function(event) {
-    if (modoArrastre && event.target.classList.contains("cell")) {
+  // Evento para detectar mouseover y pintar solo si el mouse está presionado
+  container.addEventListener("mouseover", function (event) {
+    if (modoArrastre && mousePresionado && event.target.classList.contains("cell")) {
       const cell = event.target;
-
       if (!cell.classList.contains("active")) {
         cell.classList.add("active");
         cell.style.backgroundColor = colorSeleccionado;
-        console.log(`Celda activada durante arrastre: ${cell.id}`);
+        console.log(`Celda activada en arrastre: ${cell.id}`);
       }
     }
   });
 
-  // Capturar el evento de clic derecho sobre las celdas para cambiar el color
-  container.addEventListener("contextmenu", function(event) {
-    event.preventDefault(); // Prevenir el menú contextual predeterminado del navegador
+  // Evento de clic derecho para seleccionar color
+  container.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
     if (event.target.classList.contains("cell")) {
-      const cell = event.target;
-      console.log(`Clic derecho en la celda ${cell.id}`);
-
-      // Mostrar el menú de colores en la posición del clic con fadeIn
       const colorMenu = document.getElementById("colorMenu");
       colorMenu.style.top = `${event.clientY}px`;
       colorMenu.style.left = `${event.clientX}px`;
-      colorMenu.style.opacity = "1"; // Hacer visible con opacidad
-      colorMenu.style.display = "block"; // Asegurarse de que el menú esté en el flujo
-      console.log("Menú de colores mostrado");
-
-      // Aplicar transición para desvanecer el menú
-      setTimeout(() => {
-        colorMenu.style.transition = "opacity 0.3s ease-in-out";
-      }, 10); // Tiempo de espera para que la transición se aplique después de mostrarlo
+      colorMenu.style.opacity = "1";
+      colorMenu.style.display = "block";
     }
   });
 
-  // Capturar el evento de selección de color en el menú
-  const colorButtons = document.querySelectorAll("#colorMenu button");
-  colorButtons.forEach(button => {
-    button.addEventListener("click", function() {
+  // Evento para seleccionar color
+  document.querySelectorAll("#colorMenu button").forEach((button) => {
+    button.addEventListener("click", function () {
       colorSeleccionado = button.style.backgroundColor;
-      console.log(`Color seleccionado: ${colorSeleccionado}`);
-
-      // Cerrar el menú de colores con fadeOut
       const colorMenu = document.getElementById("colorMenu");
-      colorMenu.style.opacity = "0"; // Hacer desaparecer con opacidad
+      colorMenu.style.opacity = "0";
       setTimeout(() => {
-        colorMenu.style.display = "none"; // Ocultar el menú después del fadeOut
-      }, 300); // Esperar el tiempo de la animación antes de ocultarlo
-      console.log("Menú de colores cerrado");
+        colorMenu.style.display = "none";
+      }, 300);
     });
   });
 
-  // Cerrar el menú si se hace clic fuera de él o si se mueve el cursor fuera del menú
-  document.addEventListener("click", function(event) {
+  // Evento para cerrar el menú de color
+  document.addEventListener("click", function (event) {
     const colorMenu = document.getElementById("colorMenu");
     if (!colorMenu.contains(event.target) && !event.target.classList.contains("cell")) {
-      colorMenu.style.opacity = "0"; // Desvanecer el menú con opacidad
+      colorMenu.style.opacity = "0";
       setTimeout(() => {
-        colorMenu.style.display = "none"; // Ocultar el menú después de desvanecerlo
-      }, 300); // Esperar la duración de la animación de desvanecimiento
-      console.log("Menú de colores cerrado al hacer clic fuera de él");
+        colorMenu.style.display = "none";
+      }, 300);
     }
   });
 }
